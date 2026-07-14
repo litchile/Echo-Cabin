@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="844" height="390" viewBox="0 0 844 390">
+  <style>text{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;fill:#2F3439}.muted{fill:#6B737C}.btn{fill:#30353A}.white{fill:#FFF}</style>
+  <rect width="844" height="390" fill="#F5F6F7"/>
+  <rect x="172" y="54" width="500" height="282" rx="18" fill="#FFF" stroke="#C8CDD2"/>
+  <text x="422" y="126" text-anchor="middle" font-size="32" font-weight="700">回声小屋</text>
+  <text x="422" y="153" text-anchor="middle" font-size="15" class="muted">Echo Cabin</text>
+  <text x="422" y="208" text-anchor="middle" font-size="17">把你和朋友的声音，放进一间可以走进去的小屋。</text>
+  <rect x="312" y="250" width="220" height="52" rx="12" class="btn"/>
+  <text x="422" y="282" text-anchor="middle" font-size="16" font-weight="600" class="white">开始</text>
+</svg>
