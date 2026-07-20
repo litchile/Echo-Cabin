@@ -4,6 +4,7 @@ import playerFrontThreeQuarterRightUrl from '../../../assets/art/characters/init
 import playerProfileLeftUrl from '../../../assets/art/characters/initial_character/03_profile_facing_left.png'
 import playerRearThreeQuarterLeftUrl from '../../../assets/art/characters/initial_character/04_rear_three_quarter_facing_left.png'
 import roomSceneUrl from '../../../assets/room/layers_1920x1080/00_final_room_reference.jpg'
+import type { CharacterAvatarPreset, SpawnPoint } from '../characters/characterTypes'
 import type { Point } from '../core/coordinates'
 import type { PlacementGrid } from '../scene/placementGrid'
 import type { WallNavigationConfig } from '../scene/navigationTarget'
@@ -26,6 +27,11 @@ export interface PrototypeConfig {
     deceleration: number
     visualWidth: number
     motionFeedback: PlayerMotionFeedbackConfig
+  }
+  characters: {
+    capacity: number
+    avatars: CharacterAvatarPreset[]
+    spawnPoints: SpawnPoint[]
   }
 }
 
@@ -96,5 +102,19 @@ export const prototypeConfig: PrototypeConfig = {
       bobCycleMs: 360,
       shadowMovingScale: 0.86,
     },
+  },
+  characters: {
+    capacity: 4,
+    avatars: [
+      { id: 'warm', label: '暖橙' },
+      { id: 'mist', label: '雾蓝' },
+      { id: 'moss', label: '苔绿' },
+    ],
+    spawnPoints: [
+      { id: 'center', position: { x: 960, y: 930 } },
+      { id: 'left', position: { x: 600, y: 900 } },
+      { id: 'right', position: { x: 1320, y: 900 } },
+      { id: 'front', position: { x: 960, y: 1000 } },
+    ],
   },
 }
