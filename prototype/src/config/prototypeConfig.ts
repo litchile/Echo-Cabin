@@ -106,9 +106,7 @@ export const prototypeConfig: PrototypeConfig = {
   characters: {
     capacity: 4,
     avatars: [
-      { id: 'warm', label: '暖橙' },
-      { id: 'mist', label: '雾蓝' },
-      { id: 'moss', label: '苔绿' },
+      { id: 'default', label: '小屋旅伴', imageUrl: playerFrontUrl },
     ],
     spawnPoints: [
       { id: 'center', position: { x: 960, y: 930 } },

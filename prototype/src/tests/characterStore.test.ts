@@ -26,7 +26,7 @@ const completeDraft = (
 ) => {
   store.startDraft()
   store.updateDraftIdentity(name, avatarId)
-  store.setDraftSound({ id: `placeholder-${name}`, source: 'stage-3-placeholder' })
+  store.setDraftSound({ id: `recording-${name}`, source: 'recording' })
   return store.commitDraft()
 }
 
@@ -42,7 +42,7 @@ describe('character store draft and active states', () => {
     expect(drafting.activeCharacters).toHaveLength(0)
     expect(drafting.currentCharacterId).toBeNull()
 
-    store.setDraftSound({ id: 'placeholder', source: 'stage-3-placeholder' })
+    store.setDraftSound({ id: 'recording-one', source: 'recording' })
     const created = store.commitDraft()
     expect(created.spawnPointId).toBe('one')
     expect(store.getSnapshot().draft).toBeNull()
@@ -117,5 +117,37 @@ describe('character switching', () => {
     completeDraft(store, '一号')
 
     expect(() => store.switchCurrentCharacter('missing')).toThrowError('character-not-found')
+  })
+})
+
+describe('character sound replacement', () => {
+  it('atomically returns the previous reference and preserves character identity and position', () => {
+    const store = createStore()
+    const created = completeDraft(store, '小岚')
+    store.updateCharacterPosition(created.id, { x: 180, y: 100 })
+
+    const previous = store.replaceCharacterSound(created.id, {
+      id: 'recording-new',
+      source: 'recording',
+    })
+    const updated = store.getSnapshot().activeCharacters[0]
+
+    expect(previous).toEqual(created.soundRef)
+    expect(updated.soundRef).toEqual({ id: 'recording-new', source: 'recording' })
+    expect(updated.name).toBe(created.name)
+    expect(updated.avatarId).toBe(created.avatarId)
+    expect(updated.position).toEqual({ x: 180, y: 100 })
+    expect(updated.spawnPointId).toBe(created.spawnPointId)
+  })
+
+  it('rejects an empty sound reference without changing the existing sound', () => {
+    const store = createStore()
+    const created = completeDraft(store, '小岚')
+
+    expect(() => store.replaceCharacterSound(created.id, {
+      id: ' ',
+      source: 'import',
+    })).toThrowError('sound-missing')
+    expect(store.getSnapshot().activeCharacters[0].soundRef).toEqual(created.soundRef)
   })
 })

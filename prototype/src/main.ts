@@ -1,4 +1,6 @@
 import './styles.css'
+import '@phosphor-icons/web/regular'
+import { createSoundCaptureService } from './audio/soundCapture'
 import { createCharacterStore } from './characters/characterStore'
 import type { ActiveCharacter } from './characters/characterTypes'
 import { prototypeConfig } from './config/prototypeConfig'
@@ -52,6 +54,7 @@ const characterStore = createCharacterStore({
   avatarIds: prototypeConfig.characters.avatars.map((avatar) => avatar.id),
   isSpawnPointLegal: walkableArea.isPointWalkable,
 })
+const soundCapture = createSoundCaptureService()
 
 const motionFeedback = prototypeConfig.player.motionFeedback
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -198,7 +201,6 @@ const activateCurrentCharacter = (): void => {
   syncCharacterActors()
 }
 
-let placeholderSoundSequence = 0
 const characterControls = createCharacterControls(prototypeConfig.characters.avatars, {
   getSnapshot: () => characterStore.getSnapshot(),
   beginDraft: () => {
@@ -207,18 +209,20 @@ const characterControls = createCharacterControls(prototypeConfig.characters.ava
   updateDraftIdentity: (name, avatarId) => {
     characterStore.updateDraftIdentity(name, avatarId)
   },
-  completeDraftWithPlaceholderSound: () => {
-    placeholderSoundSequence += 1
-    characterStore.setDraftSound({
-      id: `stage-3-placeholder-${placeholderSoundSequence}`,
-      source: 'stage-3-placeholder',
-    })
+  completeDraftWithSound: (soundRef) => {
+    characterStore.setDraftSound(soundRef)
     const character = characterStore.commitDraft()
     syncCharacterActors()
     if (!movement) {
       activateCurrentCharacter()
     }
     stage.setStatus(`${character.name} 已完成创建并进入场景`)
+    return character
+  },
+  replaceCharacterSound: (characterId, soundRef) => {
+    const previous = characterStore.replaceCharacterSound(characterId, soundRef)
+    stage.setStatus('角色声音已替换')
+    return previous
   },
   cancelDraft: () => {
     characterStore.cancelDraft()
@@ -233,7 +237,7 @@ const characterControls = createCharacterControls(prototypeConfig.characters.ava
   onStateChanged: () => {
     syncCharacterActors()
   },
-})
+}, soundCapture)
 
 characterStore.startDraft()
 characterControls.refresh()
@@ -353,6 +357,7 @@ window.addEventListener(
   () => {
     cancelAnimationFrame(animationFrame)
     movement?.cancel()
+    characterControls.destroy()
     stage.destroy()
   },
   { once: true },

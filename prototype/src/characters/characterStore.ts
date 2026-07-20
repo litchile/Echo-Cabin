@@ -40,6 +40,7 @@ export interface CharacterStore {
   commitDraft(): ActiveCharacter
   cancelDraft(): void
   switchCurrentCharacter(characterId: string): ActiveCharacter
+  replaceCharacterSound(characterId: string, soundRef: SavedCharacterSoundRef): SavedCharacterSoundRef
   updateCharacterPosition(characterId: string, position: Point): void
 }
 
@@ -175,6 +176,22 @@ export function createCharacterStore(options: CharacterStoreOptions): CharacterS
       }
       currentCharacterId = character.id
       return cloneActiveCharacter(character)
+    },
+    replaceCharacterSound(characterId, soundRef) {
+      if (!soundRef.id.trim()) {
+        throw new CharacterStoreError('sound-missing')
+      }
+      const index = activeCharacters.findIndex((character) => character.id === characterId)
+      if (index < 0) {
+        throw new CharacterStoreError('character-not-found')
+      }
+      const previousSoundRef = cloneSoundRef(activeCharacters[index].soundRef)
+      activeCharacters = activeCharacters.map((character, characterIndex) =>
+        characterIndex === index
+          ? { ...character, soundRef: cloneSoundRef(soundRef) }
+          : character,
+      )
+      return previousSoundRef
     },
     updateCharacterPosition(characterId, position) {
       const index = activeCharacters.findIndex((character) => character.id === characterId)

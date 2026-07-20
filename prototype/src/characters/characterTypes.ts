@@ -3,11 +3,12 @@ import type { Point } from '../core/coordinates'
 export interface CharacterAvatarPreset {
   id: string
   label: string
+  imageUrl: string
 }
 
 export interface SavedCharacterSoundRef {
   id: string
-  source: 'stage-3-placeholder' | 'recording' | 'import'
+  source: 'recording' | 'import'
 }
 
 export interface DraftCharacter {
