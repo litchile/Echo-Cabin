@@ -351,6 +351,14 @@ prototype/
 - 风险：创建界面、运行时角色和音频节点相互强耦合；
 - 控制：只有阶段 4 的声音主动保存成功才能提交 draft；active character 只保存声音引用，具体录制对象由声音采集模块管理。
 
+## Checkpoint：Sound Creation UI Shell V0.1
+
+阶段 3 完成后、阶段 4 编码开始前，先冻结角色创建与声音采集流程的界面结构。该 Checkpoint 只处理低保真到中保真的 UI 信息架构、状态覆盖与场景内入口关系，不实现录音、导入、音频播放或正式视觉品牌。
+
+本 Checkpoint 的唯一设计事实来源为 `SOUND_CREATION_UI_SHELL_V0.1.md`。完成门槛是核心入口、正常流程、错误状态和返回场景路径均能在 Figma 原型中被连续检查，并确认主场景不会长期悬挂后台式角色管理面板。
+
+在该 Checkpoint 确认前，不开始阶段 4 的录音与导入编码。阶段 3 已有的开发测试入口不作为公开 UI 方案，也不应进入生产体验。
+
 ## 阶段 4：现场录制、本地导入、试听与保存
 
 ### 实现内容
@@ -381,7 +389,7 @@ prototype/
 
 ### 依赖与风险
 
-- 依赖：阶段 3 创建状态；浏览器 MediaDevices、MediaRecorder、File API 与音频解码支持；
+- 依赖：阶段 3 创建状态；Sound Creation UI Shell V0.1 已确认；浏览器 MediaDevices、MediaRecorder、File API 与音频解码支持；
 - 高风险：Safari 支持的录音编码、文件格式和权限生命周期可能与 Chrome 不同；
 - 控制：以运行时能力检测决定可用入口，不只依赖 User-Agent；通过阶段 4 的 HTTPS 公开冒烟尽早在真实 iPhone 和 Android 上测试。
 
@@ -566,14 +574,15 @@ prototype/
   → 公开冒烟 A：Pages base、刷新、静态图片、手机横屏
   → 2 场景与移动
     → 3 角色状态与切换
-      → 4 录制、导入与保存
-        → 公开冒烟 B：HTTPS 录制、导入、试听、移动实机
-        → 5 自声与距离声音
-          → 6 间歇调度
-            → 7 回忆物品与音频避让
-              → 8 AudioContext 生命周期恢复与兼容增强
-                → 9 GitHub Pages 正式部署验收
-                  → 10 三平台验收
+      → Checkpoint：Sound Creation UI Shell V0.1
+        → 4 录制、导入与保存
+          → 公开冒烟 B：HTTPS 录制、导入、试听、移动实机
+          → 5 自声与距离声音
+            → 6 间歇调度
+              → 7 回忆物品与音频避让
+                → 8 AudioContext 生命周期恢复与兼容增强
+                  → 9 GitHub Pages 正式部署验收
+                    → 10 三平台验收
 ```
 
 允许在阶段 3 完成后准备阶段 4 的浏览器能力调查和测试设备，但不得跳过阶段验收后直接合并实现多个音频模块。
