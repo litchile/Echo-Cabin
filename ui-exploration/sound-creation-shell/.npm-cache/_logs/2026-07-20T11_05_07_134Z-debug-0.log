@@ -1,0 +1,31 @@
+0 verbose cli E:\ai\node\node.exe E:\ai\node\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.13.0
+2 info using node@v24.16.0
+3 silly config load:file:E:\ai\node\node_modules\npm\npmrc
+4 silly config load:file:E:\work\ai learn\Echo Cabin\ui-exploration\sound-creation-shell\.npmrc
+5 silly config load:file:C:\Users\DELL\.npmrc
+6 silly config load:file:C:\Users\DELL\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install @phosphor-icons/web
+8 verbose argv "install" "@phosphor-icons/web"
+9 verbose logfile logs-max:10 dir:E:\work\ai learn\Echo Cabin\ui-exploration\sound-creation-shell\.npm-cache\_logs\2026-07-20T11_05_07_134Z-
+10 verbose logfile E:\work\ai learn\Echo Cabin\ui-exploration\sound-creation-shell\.npm-cache\_logs\2026-07-20T11_05_07_134Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 verbose shrinkwrap failed to load node_modules/.package-lock.json out of date, updated: node_modules
+14 silly idealTree buildDeps
+15 silly fetch manifest @phosphor-icons/web@*
+16 silly packumentCache full:https://registry.npmjs.org/@phosphor-icons%2fweb cache-miss
+17 http fetch GET 200 https://registry.npmjs.org/@phosphor-icons%2fweb 2011ms (cache miss)
+18 silly packumentCache full:https://registry.npmjs.org/@phosphor-icons%2fweb set size:undefined disposed:false
+19 silly placeDep ROOT @phosphor-icons/web@2.1.2 OK for: sound-creation-shell@0.0.0 want: *
+20 silly reify moves {}
+21 http cache @phosphor-icons/web@https://registry.npmjs.org/@phosphor-icons/web/-/web-2.1.2.tgz 5ms (cache hit)
+22 silly tarball no local data for @phosphor-icons/web@https://registry.npmjs.org/@phosphor-icons/web/-/web-2.1.2.tgz. Extracting by manifest.
+23 http fetch GET 200 https://registry.npmjs.org/@phosphor-icons/web/-/web-2.1.2.tgz 43070ms (cache miss)
+24 silly ADD node_modules/@phosphor-icons/web
+25 verbose cwd E:\work\ai learn\Echo Cabin\ui-exploration\sound-creation-shell
+26 verbose os Windows_NT 10.0.26200
+27 verbose node v24.16.0
+28 verbose npm  v11.13.0
+29 verbose exit 0
+30 info ok
