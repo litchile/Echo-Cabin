@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Echo Cabin virtual stage test grid</title>
+  <desc id="desc">A neutral sixteen by nine grid used to validate scaling and asset paths.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#344244"/>
+      <stop offset="1" stop-color="#1c2628"/>
+    </linearGradient>
+    <pattern id="minor-grid" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M 120 0 L 0 0 0 120" fill="none" stroke="#d7e7e7" stroke-opacity=".08" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#background)"/>
+  <rect width="1920" height="1080" fill="url(#minor-grid)"/>
+  <path d="M960 0v1080M0 540h1920" stroke="#d7e7e7" stroke-opacity=".22" stroke-width="3"/>
+  <path d="M1.5 1.5h1917v1077H1.5z" fill="none" stroke="#f4d887" stroke-opacity=".72" stroke-width="3"/>
+  <circle cx="960" cy="540" r="18" fill="none" stroke="#f4d887" stroke-width="4"/>
+  <g fill="#dce8e8" fill-opacity=".72" font-family="system-ui, sans-serif" font-size="28">
+    <text x="32" y="48">0, 0</text>
+    <text x="1750" y="48">1920, 0</text>
+    <text x="32" y="1042">0, 1080</text>
+    <text x="1700" y="1042">1920, 1080</text>
+    <text x="988" y="526">960, 540</text>
+  </g>
+</svg>
