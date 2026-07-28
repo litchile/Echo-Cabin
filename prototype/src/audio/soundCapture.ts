@@ -27,9 +27,6 @@ export interface SoundAsset {
 
 export interface SoundCaptureService {
   isRecordingSupported(): boolean
-  ensureAudioReady(): Promise<AudioContext>
-  getAudioBuffer(soundId: string): AudioBuffer | null
-  setBeforePreview(callback: (() => void) | null): void
   startRecording(): Promise<void>
   stopRecording(): Promise<SoundAsset>
   cancelRecording(): void
@@ -85,7 +82,6 @@ export function createSoundCaptureService(): SoundCaptureService {
   let stopRejecter: ((error: unknown) => void) | null = null
   let discardRecording = false
   let playingSource: AudioBufferSourceNode | null = null
-  let beforePreview: (() => void) | null = null
   let soundSequence = 0
   const assets = new Map<string, StoredSoundAsset>()
 
@@ -163,16 +159,6 @@ export function createSoundCaptureService(): SoundCaptureService {
   return {
     isRecordingSupported: () => hasUserMedia() && hasMediaRecorder(),
 
-    ensureAudioReady: ensureContext,
-
-    getAudioBuffer(soundId) {
-      return assets.get(soundId)?.buffer ?? null
-    },
-
-    setBeforePreview(callback) {
-      beforePreview = callback
-    },
-
     async startRecording() {
       if (!hasUserMedia() || !hasMediaRecorder()) {
         throw new SoundCaptureError('recording-unsupported')
@@ -238,7 +224,6 @@ export function createSoundCaptureService(): SoundCaptureService {
       const asset = assets.get(soundId)
       if (!asset) throw new SoundCaptureError('file-unsupported')
       const context = await ensureContext()
-      beforePreview?.()
       this.stopPlayback()
       const source = context.createBufferSource()
       source.buffer = asset.buffer
@@ -270,7 +255,6 @@ export function createSoundCaptureService(): SoundCaptureService {
       this.cancelRecording()
       this.stopPlayback()
       assets.clear()
-      beforePreview = null
       void audioContext?.close()
       audioContext = null
     },

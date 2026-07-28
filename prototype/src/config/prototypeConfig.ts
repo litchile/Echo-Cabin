@@ -26,24 +26,12 @@ export interface PrototypeConfig {
     acceleration: number
     deceleration: number
     visualWidth: number
-    visualHeight: number
     motionFeedback: PlayerMotionFeedbackConfig
   }
   characters: {
     capacity: number
     avatars: CharacterAvatarPreset[]
     spawnPoints: SpawnPoint[]
-  }
-  audio: {
-    selfGain: number
-    otherCharacterMaxGain: number
-    clearDistance: number
-    maxHearingDistance: number
-    smoothingMs: number
-    characterBusGain: number
-    masterGain: number
-    theoreticalPeakCeiling: number
-    playbackIntervalMs: number
   }
 }
 
@@ -104,7 +92,6 @@ export const prototypeConfig: PrototypeConfig = {
     acceleration: 980,
     deceleration: 1180,
     visualWidth: 170,
-    visualHeight: 352,
     motionFeedback: {
       enabled: true,
       directionHoldMs: 140,
@@ -122,21 +109,10 @@ export const prototypeConfig: PrototypeConfig = {
       { id: 'default', label: '小屋旅伴', imageUrl: playerFrontUrl },
     ],
     spawnPoints: [
-      { id: 'center', position: { x: 960, y: 840 } },
+      { id: 'center', position: { x: 960, y: 930 } },
       { id: 'left', position: { x: 600, y: 900 } },
       { id: 'right', position: { x: 1320, y: 900 } },
-      { id: 'front', position: { x: 960, y: 1010 } },
+      { id: 'front', position: { x: 960, y: 1000 } },
     ],
-  },
-  audio: {
-    selfGain: 0.20,
-    otherCharacterMaxGain: 0.45,
-    clearDistance: 80,
-    maxHearingDistance: 420,
-    smoothingMs: 320,
-    characterBusGain: 0.45,
-    masterGain: 1,
-    theoreticalPeakCeiling: 0.5,
-    playbackIntervalMs: 3000,
   },
 }

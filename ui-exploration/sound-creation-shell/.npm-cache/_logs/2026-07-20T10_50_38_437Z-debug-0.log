@@ -10,9 +10,3 @@
 9 verbose logfile logs-max:10 dir:E:\work\ai learn\Echo Cabin\ui-exploration\sound-creation-shell\.npm-cache\_logs\2026-07-20T10_50_38_437Z-
 10 verbose logfile E:\work\ai learn\Echo Cabin\ui-exploration\sound-creation-shell\.npm-cache\_logs\2026-07-20T10_50_38_437Z-debug-0.log
 11 silly logfile done cleaning log files
-12 verbose cwd E:\work\ai learn\Echo Cabin\ui-exploration\sound-creation-shell
-13 verbose os Windows_NT 10.0.26200
-14 verbose node v24.16.0
-15 verbose npm  v11.13.0
-16 verbose exit 1073807364
-17 verbose code 1073807364

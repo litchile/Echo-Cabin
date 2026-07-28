@@ -10,13 +10,11 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@types/three": "^0.185.1",
     "typescript": "^5.9.3",
     "vite": "^7.2.4",
     "vitest": "^4.0.13"
   },
   "dependencies": {
-    "@phosphor-icons/web": "^2.1.2",
-    "three": "^0.185.1"
+    "@phosphor-icons/web": "^2.1.2"
   }
 }

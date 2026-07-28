@@ -4,7 +4,7 @@
 
 - Implementation: `ui-exploration/sound-creation-shell/`
 - Visual source of truth: `references/selected-creation-ui-board.png`
-- Product behavior sources: `docs/02_UX_Flow_V0.6.md` and `docs/SOUND_CREATION_UI_SHELL_V0.2.md`
+- Product behavior sources: `docs/02_UX_Flow_V0.5.md` and `docs/SOUND_CREATION_UI_SHELL_V0.2.md`
 - This is a simulated UI preview. It does not use a microphone, local audio files, `AudioContext`, persistence, or formal Prototype business logic.
 
 ## Browser evidence
