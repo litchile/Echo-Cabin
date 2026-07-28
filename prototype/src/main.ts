@@ -1,6 +1,7 @@
 import './styles.css'
 import '@phosphor-icons/web/regular'
 import { createSoundCaptureService } from './audio/soundCapture'
+import { createSpatialAudioEngine } from './audio/spatialAudio'
 import { createCharacterStore } from './characters/characterStore'
 import type { ActiveCharacter } from './characters/characterTypes'
 import { prototypeConfig } from './config/prototypeConfig'
@@ -55,6 +56,9 @@ const characterStore = createCharacterStore({
   isSpawnPointLegal: walkableArea.isPointWalkable,
 })
 const soundCapture = createSoundCaptureService()
+const spatialAudio = createSpatialAudioEngine(soundCapture, prototypeConfig.audio)
+let resumeSpatialAudioAfterPanel = false
+let characterPanelOpen = false
 
 const motionFeedback = prototypeConfig.player.motionFeedback
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -68,6 +72,7 @@ interface CharacterActorView {
 }
 
 const characterActors = new Map<string, CharacterActorView>()
+let audioControl: HTMLButtonElement | null = null
 
 Object.values(prototypeConfig.player.facingSprites).forEach((imageUrl) => {
   const image = new Image()
@@ -77,6 +82,7 @@ Object.values(prototypeConfig.player.facingSprites).forEach((imageUrl) => {
 const positionWorldElement = (element: HTMLElement, point: Point): void => {
   element.style.left = `${(point.x / WORLD_WIDTH) * 100}%`
   element.style.top = `${(point.y / WORLD_HEIGHT) * 100}%`
+  element.style.zIndex = String(Math.round(point.y))
 }
 
 const createCharacterActor = (character: ActiveCharacter): CharacterActorView => {
@@ -86,6 +92,7 @@ const createCharacterActor = (character: ActiveCharacter): CharacterActorView =>
   element.dataset.avatar = character.avatarId
   element.dataset.name = character.name
   element.style.width = `${(prototypeConfig.player.visualWidth / WORLD_WIDTH) * 100}%`
+  element.style.height = `${(prototypeConfig.player.visualHeight / WORLD_HEIGHT) * 100}%`
   element.dataset.motionEnabled = String(motionFeedbackEnabled)
   element.style.setProperty('--player-bob-amplitude', String(motionFeedback.bobAmplitudePercent))
   element.style.setProperty('--player-bob-cycle', `${motionFeedback.bobCycleMs}ms`)
@@ -155,6 +162,14 @@ const syncCharacterActors = (): void => {
       view.element.dataset.moving = 'false'
     }
   })
+
+  spatialAudio.sync(snapshot)
+  if (audioControl) {
+    audioControl.disabled = snapshot.activeCharacters.length === 0
+    audioControl.innerHTML = spatialAudio.isRunning()
+      ? '<i class="ph ph-speaker-high" aria-hidden="true"></i><span>重新开始角色声音</span>'
+      : '<i class="ph ph-speaker-simple-high" aria-hidden="true"></i><span>开启角色声音</span>'
+  }
 }
 
 const persistCurrentPosition = (): void => {
@@ -216,7 +231,7 @@ const characterControls = createCharacterControls(prototypeConfig.characters.ava
     if (!movement) {
       activateCurrentCharacter()
     }
-    stage.setStatus(`${character.name} 已完成创建并进入场景`)
+    stage.setStatus(`${character.name} 已进入场景，请点击左侧“开启角色声音”`)
     return character
   },
   replaceCharacterSound: (characterId, soundRef) => {
@@ -237,7 +252,43 @@ const characterControls = createCharacterControls(prototypeConfig.characters.ava
   onStateChanged: () => {
     syncCharacterActors()
   },
+  onPanelVisibilityChanged: (isOpen) => {
+    if (isOpen === characterPanelOpen) return
+    characterPanelOpen = isOpen
+    if (isOpen) {
+      resumeSpatialAudioAfterPanel = spatialAudio.isRunning()
+      if (resumeSpatialAudioAfterPanel) spatialAudio.stopAll()
+      syncCharacterActors()
+      return
+    }
+    if (!resumeSpatialAudioAfterPanel) return
+    resumeSpatialAudioAfterPanel = false
+    void spatialAudio.startAll()
+      .then(() => syncCharacterActors())
+      .catch(() => stage.setStatus('场景声音恢复失败，请点击“开启角色声音”重试', 'error'))
+  },
 }, soundCapture)
+
+audioControl = document.createElement('button')
+audioControl.type = 'button'
+audioControl.className = 'stage-audio-control'
+audioControl.dataset.interactive = 'true'
+audioControl.innerHTML = '<i class="ph ph-speaker-simple-high" aria-hidden="true"></i><span>开启角色声音</span>'
+audioControl.addEventListener('click', async () => {
+  try {
+    await spatialAudio.initialize()
+    const mix = spatialAudio.sync(characterStore.getSnapshot())
+    const played = await spatialAudio.startAll()
+    syncCharacterActors()
+    stage.setStatus(
+      played > 0
+        ? `空间声音已开始：${played} 个可听角色，角色总线 ${mix.characterBusGain.toFixed(2)}`
+        : '没有找到可播放的角色声音，请重新录制或导入后再试',
+    )
+  } catch {
+    stage.setStatus('声音初始化失败，请再次点击恢复声音', 'error')
+  }
+})
 
 characterStore.startDraft()
 characterControls.refresh()
@@ -290,7 +341,7 @@ stage.ready
   .then(() => stage.setStatus('场景已加载：请先创建角色；完成后可点击地板或墙前代理区移动'))
   .catch(() => stage.setStatus('场景资源加载失败，请刷新页面重试', 'error'))
 
-stage.element.append(characterControls.element)
+stage.element.append(characterControls.element, audioControl)
 app.replaceChildren(stage.element, orientationHint)
 syncCharacterActors()
 
@@ -307,6 +358,7 @@ const animate = (time: number): void => {
 
     if (snapshot.isMoving || snapshot.stopReason !== previousStopReason) {
       characterStore.updateCharacterPosition(movingCharacterId, snapshot.position)
+      spatialAudio.sync(characterStore.getSnapshot())
     }
     if (actor) {
       positionWorldElement(actor.element, snapshot.position)
@@ -357,6 +409,7 @@ window.addEventListener(
   () => {
     cancelAnimationFrame(animationFrame)
     movement?.cancel()
+    spatialAudio.destroy()
     characterControls.destroy()
     stage.destroy()
   },

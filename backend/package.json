@@ -1,0 +1,21 @@
+{
+  "name": "echo-cabin-multiplayer-backend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm test",
+    "smoke": "node tools/smoke-test.mjs",
+    "encounter-smoke": "node tools/encounter-smoke.mjs",
+    "dev-player": "node tools/dev-player.mjs"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260726.1",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10",
+    "wrangler": "^4.114.0"
+  }
+}

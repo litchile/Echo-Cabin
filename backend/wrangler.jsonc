@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "echo-cabin-multiplayer-backend",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-26",
+  "vars": {
+    "ENVIRONMENT": "development",
+    "DEV_SESSION_SECRET": "local-only-change-before-sharing"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "PLANET_ROOMS",
+        "class_name": "PlanetRoom"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["PlanetRoom"]
+    }
+  ]
+}

@@ -16,6 +16,7 @@ export interface CharacterControlActions {
   cancelDraft(): void
   switchCharacter(characterId: string): void
   onStateChanged(): void
+  onPanelVisibilityChanged?(isOpen: boolean): void
 }
 
 export interface CharacterControls {
@@ -81,6 +82,7 @@ export function createCharacterControls(
   let operationId = 0
   let returnStep: Step = 'source'
   let busy = false
+  let notifiedPanelOpen = false
 
   const snapshot = (): CharacterStateSnapshot => actions.getSnapshot()
 
@@ -106,6 +108,11 @@ export function createCharacterControls(
     if (state.draft && mode === 'idle') {
       mode = 'create'
       step = 'identity'
+    }
+    const panelOpen = mode !== 'idle' || switcherOpen
+    if (panelOpen !== notifiedPanelOpen) {
+      notifiedPanelOpen = panelOpen
+      actions.onPanelVisibilityChanged?.(panelOpen)
     }
 
     const toolbar = document.createElement('div')
